@@ -71,17 +71,9 @@ class ScholarSource(BaseSource):
                 if val in indexes:
                     indexes[val] = index
             students = []
+            highschool_list = ["26", "27", "28", "29", "31", "32", "33", "34"]
             for row in readCSV:
-                if str(row[indexes["TP_ETAPA_ENSINO"]]) not in [
-                    "26",
-                    "27",
-                    "28",
-                    "29",
-                    "31",
-                    "32",
-                    "33",
-                    "34",
-                ]:
+                if str(row[indexes["TP_ETAPA_ENSINO"]]) not in highschool_list:
                     continue
                 student = ScholarStudent(
                     year=row[indexes["NU_ANO_CENSO"]],
