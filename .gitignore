@@ -1,7 +1,9 @@
+data_lake/
+!mec_data/data_lake/
 .env
 .env_prod
 .env_local
-
+temp/
 .venv/
 .vscode/
 playground/

@@ -1,8 +1,8 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from retail_stores.manage.app import create_app
-from retail_stores.model.company import Company
+from mec_data.manage.app import create_app
+from mec_data.model.company import Company
 
 
 class TestCompanyController(TestCase):
@@ -10,7 +10,7 @@ class TestCompanyController(TestCase):
     def setUp(self):
         self.test_app = create_app()
 
-    @patch('retail_stores.controller.company.service')    
+    @patch('mec_data.controller.company.service')    
     def test_company_post(self, mocked_service):
         mocked_service.company.create.return_value = Company(
             id=0, name='teste', department='clothing'
@@ -26,7 +26,7 @@ class TestCompanyController(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json(), expected_json)
 
-    @patch('retail_stores.controller.company.service')    
+    @patch('mec_data.controller.company.service')    
     def test_company_get(self, mocked_service):
         mocked_service.company.get_all.return_value = [
             Company(id=1, name='teste', department='clothing'),
@@ -50,7 +50,7 @@ class TestCrawlController(TestCase):
     def setUp(self):
         self.test_app = create_app()
 
-    @patch('retail_stores.controller.crawl.service')
+    @patch('mec_data.controller.crawl.service')
     def test_crawl_post(self, mocked_service):
         mocked_service.company.crawl.return_value = ('Crawled 1 item', 200)
         with self.test_app.test_client() as client:
@@ -68,7 +68,7 @@ class TestClusterController(TestCase):
     def setUp(self):
         self.test_app = create_app()
 
-    @patch('retail_stores.controller.cluster.service')
+    @patch('mec_data.controller.cluster.service')
     def test_register_post(self, mocked_service):
         post_json = {
             'distances': [0, 1, 2.5],
@@ -93,7 +93,7 @@ class TestClusterController(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json(), response_json)
 
-    @patch('retail_stores.controller.cluster.service')
+    @patch('mec_data.controller.cluster.service')
     def test_register_post_exception(self, mocked_service):
         post_json = {
             'distances': [0, 1, 2.5],
@@ -113,7 +113,7 @@ class TestClusterController(TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response.get_data(as_text=True), 'Fail')
 
-    @patch('retail_stores.controller.cluster.service.cluster.ClusterService')
+    @patch('mec_data.controller.cluster.service.cluster.ClusterService')
     def test_cluster(self, MClusterService):
         MClusterService.return_value.cluster.return_value = 'cluster'
         with self.test_app.test_client() as client:
@@ -130,7 +130,7 @@ class TestIBGEController(TestCase):
     def setUp(self):
         self.test_app = create_app()
 
-    @patch('retail_stores.controller.ibge_data.service')
+    @patch('mec_data.controller.ibge_data.service')
     def test_cities_post(self, mocked_service):
         mocked_service.ibge_data.load_cities.return_value = 'Loaded 1 city'
         with self.test_app.test_client() as client:
@@ -142,7 +142,7 @@ class TestIBGEController(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json(), 'Loaded 1 city')
 
-    @patch('retail_stores.controller.ibge_data.service')
+    @patch('mec_data.controller.ibge_data.service')
     def test_age_level_post(self, mocked_service):
         mocked_service.ibge_data.load_age_level.return_value = 'Loaded 1 for 1 cities'
         with self.test_app.test_client() as client:
@@ -154,7 +154,7 @@ class TestIBGEController(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json(), 'Loaded 1 for 1 cities')
 
-    @patch('retail_stores.controller.ibge_data.service')
+    @patch('mec_data.controller.ibge_data.service')
     def test_education_level_post(self, mocked_service):
         mocked_service.ibge_data.load_education_level.return_value = 'Loaded 1 for 1 cities'
         with self.test_app.test_client() as client:
@@ -167,7 +167,7 @@ class TestIBGEController(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json(), 'Loaded 1 for 1 cities')
 
-    @patch('retail_stores.controller.ibge_data.service')
+    @patch('mec_data.controller.ibge_data.service')
     def test_load_income_range_post(self, mocked_service):
         mocked_service.ibge_data.load_income_range.return_value = 'Loaded 1 for 1 cities'
         with self.test_app.test_client() as client:

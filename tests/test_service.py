@@ -1,9 +1,9 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from retail_stores.manage.app import create_app
-from retail_stores import service
-from retail_stores.model.company import Company
+from mec_data.manage.app import create_app
+from mec_data import service
+from mec_data.model.company import Company
 
 from tests.mocks.mocked_ibge import *
 
@@ -13,7 +13,7 @@ class TestCompanyService(TestCase):
     def setUp(self):
         self.test_app = create_app()
 
-    @patch('retail_stores.service.company.dal')
+    @patch('mec_data.service.company.dal')
     def test_create_get(self, mocked_dal):
         vivara = {
             'name': 'vivara',
@@ -27,15 +27,15 @@ class TestCompanyService(TestCase):
         self.assertEqual(create.name, Company(**vivara).name)
         self.assertEqual(create.department, Company(**vivara).department)
 
-    @patch('retail_stores.service.company.ApiRunner')
+    @patch('mec_data.service.company.ApiRunner')
     def test_api_crawl(self, MockedApiRunner):
         MockedApiRunner.return_value.run.return_value = 'Crawled 5 items'
         with self.test_app.app_context():
             crawled = service.company.crawl(1)
         self.assertEqual(crawled, ('Crawled 5 items', 200))
     
-    @patch('retail_stores.service.company.ScrapyRunner')
-    @patch('retail_stores.service.company.ApiRunner')
+    @patch('mec_data.service.company.ScrapyRunner')
+    @patch('mec_data.service.company.ApiRunner')
     def test_scrapy_crawl(self, MockedApiRunner, MockedScrapyRunner):
         MockedApiRunner.return_value.run.side_effect = AttributeError
         MockedScrapyRunner.return_value.run.return_value = 'Crawled 10 items'
@@ -43,8 +43,8 @@ class TestCompanyService(TestCase):
             crawled = service.company.crawl(1)
         self.assertEqual(crawled, ('Crawled 10 items', 200))
     
-    @patch('retail_stores.service.company.ScrapyRunner')
-    @patch('retail_stores.service.company.ApiRunner')
+    @patch('mec_data.service.company.ScrapyRunner')
+    @patch('mec_data.service.company.ApiRunner')
     def test_crawl_exception(self, MockedApiRunner, MockedScrapyRunner):
         MockedApiRunner.return_value.run.side_effect = TypeError('Fail')
         with self.test_app.app_context():
@@ -57,32 +57,32 @@ class TestIBGEService(TestCase):
     def setUp(self):
         self.test_app = create_app()
 
-    @patch('retail_stores.service.ibge_data.dal')
-    @patch('retail_stores.service.ibge_data.requests')
+    @patch('mec_data.service.ibge_data.dal')
+    @patch('mec_data.service.ibge_data.requests')
     def test_load_age_level(self, mocked_requests, mocked_dal):
         mocked_requests.get.return_value.json.return_value = mocked_age_levels
         with self.test_app.app_context():
             load = service.ibge_data.load_age_level('2010')
         self.assertEqual(load, 'Loaded 39 for 3 cities')
 
-    @patch('retail_stores.service.ibge_data.dal')
-    @patch('retail_stores.service.ibge_data.requests')
+    @patch('mec_data.service.ibge_data.dal')
+    @patch('mec_data.service.ibge_data.requests')
     def test_load_education_level(self, mocked_requests, mocked_dal):
         mocked_requests.get.return_value.json.return_value = mocked_education_level
         with self.test_app.app_context():
             load = service.ibge_data.load_education_level('2010')
         self.assertEqual(load, 'Loaded 15 for 3 cities')
 
-    @patch('retail_stores.service.ibge_data.dal')
-    @patch('retail_stores.service.ibge_data.requests')
+    @patch('mec_data.service.ibge_data.dal')
+    @patch('mec_data.service.ibge_data.requests')
     def test_load_income_range(self, mocked_requests, mocked_dal):
         mocked_requests.get.return_value.json.return_value = mocked_income_range
         with self.test_app.app_context():
             load = service.ibge_data.load_income_range('2010')
         self.assertEqual(load, 'Loaded 24 for 3 cities')
 
-    @patch('retail_stores.service.ibge_data.dal')
-    @patch('retail_stores.service.ibge_data.requests')
+    @patch('mec_data.service.ibge_data.dal')
+    @patch('mec_data.service.ibge_data.requests')
     def test_load_cities(self, mocked_requests, mocked_dal):
         mocked_requests.get.return_value.json.return_value = mocked_cities
         with self.test_app.app_context():
@@ -104,7 +104,7 @@ class TestClusterRegisterService(TestCase):
         )
         return company_obj
 
-    @patch('retail_stores.service.cluster_register.dal')
+    @patch('mec_data.service.cluster_register.dal')
     def test_cluster_register(self, mocked_dal):
         register_req = {
             'distances': [0],
@@ -117,7 +117,7 @@ class TestClusterRegisterService(TestCase):
             register = service.cluster_register.register(register_req)
             self.assertEqual(register, {'distances': [0], 'label': 'any', 'department': 'multi'})
 
-    @patch('retail_stores.service.cluster_register.dal')
+    @patch('mec_data.service.cluster_register.dal')
     def test_cluster_register_error(self, mocked_dal):
         register_req = {
             'distances': [0],
@@ -140,14 +140,14 @@ class TestDwService(TestCase):
         store.deactivate_date = datetime.utcnow()
         return store
 
-    @patch('retail_stores.service.data_warehouse.dal')
-    @patch('retail_stores.service.data_warehouse.get_query_client')
+    @patch('mec_data.service.data_warehouse.dal')
+    @patch('mec_data.service.data_warehouse.get_query_client')
     def test_load_stores(self, mget_query_client, mocked_dal):
         # Import
         from tests.mocks.athena_rows_test import mocked_rows
         from tests.mocks.dw_mocked_stores import get_stores
-        from retail_stores.model.company import Company
-        from retail_stores.service.data_warehouse import DataWarehouseService
+        from mec_data.model.company import Company
+        from mec_data.service.data_warehouse import DataWarehouseService
         # Create mocks
         company = Company(id=1, name='test', department='test')
         mget_query_client.return_value.run_query.return_value = mocked_rows
@@ -184,11 +184,11 @@ class TestClusterRegisterService(TestCase):
         return neighbors
 
 
-    @patch('retail_stores.service.cluster.dal')
+    @patch('mec_data.service.cluster.dal')
     def test_cluster(self, mocked_dal):
-        from retail_stores.service.cluster import ClusterService
-        from retail_stores.model.cluster_register import ClusterRegister
-        from retail_stores.model.company import Company
+        from mec_data.service.cluster import ClusterService
+        from mec_data.model.cluster_register import ClusterRegister
+        from mec_data.model.company import Company
         from tests.mocks.dw_mocked_stores import get_stores
         from tests.mocks.neighbors import neighbors_dict
         # Set mocks

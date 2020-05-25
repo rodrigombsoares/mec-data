@@ -7,25 +7,25 @@ from unittest import TestLoader, TextTestRunner
 from coverage import Coverage
 from pylint import epylint as lint
 
-from retail_stores.manage.app import create_app
+from mec_data.manage.app import create_app
 
 from flask_migrate import (
-    Migrate, 
+    Migrate,
     init as _init,
     migrate as _migrate,
     upgrade
 )
 
-from retail_stores.model.databases import data_warehouse as db
+from mec_data.model.databases import data_warehouse as db
 
 
 def import_models():
-    models_package = join(getcwd(), 'retail_stores', 'model')
+    models_package = join(getcwd(), 'mec_data', 'model')
     files = listdir(models_package)
     module_names = [
         file[:-3] for file in files if file.endswith('.py') and file != '__init__.py']
     for module_name in module_names:
-        import_module('retail_stores.model.{}'.format(module_name))
+        import_module('mec_data.model.{}'.format(module_name))
 
 
 def init():
@@ -63,16 +63,16 @@ def serve():
     Launch web server with flask application
     """
     application = create_app()
-    migrate = Migrate(application, db)
-    # import all models for migration
-    import_models()
-    # apply migrations to db
-    with application.app_context():
-        upgrade()
+    # migrate = Migrate(application, db)
+    # # import all models for migration
+    # import_models()
+    # # apply migrations to db
+    # with application.app_context():
+    #     upgrade()
     # run app
     application.run(
-        host=application.config['RETAIL_STORES_NETWORK_HOST'],
-        port=application.config['RETAIL_STORES_NETWORK_PORT'],
+        host=application.config['MEC_DATA_NETWORK_HOST'],
+        port=application.config['MEC_DATA_NETWORK_PORT'],
         debug=True,
         use_reloader=False
     )
@@ -82,7 +82,7 @@ def lint_all():
     """
     Lint all app packages using Pylint
     """
-    lint.py_run(join(getcwd(), "retail_stores"))
+    lint.py_run(join(getcwd(), "mec_data"))
     lint.py_run(join(getcwd(), "tests"))
 
 
