@@ -1,3 +1,4 @@
+*.db
 data_lake/
 !mec_data/data_lake/
 .env

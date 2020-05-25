@@ -62,11 +62,6 @@ def configure_app(app):
     storage_settings = StorageSettings()
     load_env(storage_settings, prefix=storage_settings.prefix())
     storage_settings.configure(app)
-
-    # # General configuration
-    # general_settings = GeneralSettings()
-    # load_env(general_settings, prefix=general_settings.prefix())
-    # general_settings.configure(app)
     return app
 
 

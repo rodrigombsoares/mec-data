@@ -81,18 +81,3 @@ class StorageSettings:
             app.config[self.prefix() + "_" + setting.name.upper()] = getattr(
                 self, setting.name
             )
-
-
-# @envclass
-# @dataclass
-# class GeneralSettings:
-#     process_client: str = ''
-
-#     def prefix(self):
-#         return 'MEC_DATA'
-
-#     def configure(self, app) -> None:
-#         for setting in fields(self):
-#             app.config[self.prefix() + '_' + setting.name.upper()] = getattr(
-#                 self, setting.name
-#             )
