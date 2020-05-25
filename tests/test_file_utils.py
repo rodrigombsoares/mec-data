@@ -23,7 +23,7 @@ class TestUtils(TestCase):
         m_request.Request.side_effect = HTTPError(
             url="mocked", code=500, msg="mocked", hdrs="mocked", fp="mocked"
         )
-        download("test.com", "path")
+        download("test.com", os.path.join(os.getcwd(), "tests", "mock"))
 
     @patch("mec_data.utils.download_manager.urllib.request")
     def test_http_error_404(self, m_request):
