@@ -6,13 +6,6 @@ from urllib.error import HTTPError
 import logging
 
 
-def remove_old_file(path):
-    try:
-        os.remove(path)
-    except FileNotFoundError:
-        pass
-
-
 def create_if_not_exists(temp_folder):
     try:
         os.makedirs(temp_folder)

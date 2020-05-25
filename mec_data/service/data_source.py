@@ -1,4 +1,4 @@
-from mec_data.source import get_source
+from mec_data.source.factory import get_source
 
 
 def download(source_name, year):

@@ -5,13 +5,20 @@ from flask_restplus import Namespace, Resource
 from mec_data import dal
 from mec_data import service
 
-api = Namespace("DataWarehouse",)
+api = Namespace("DataWarehouse", description="Structure and Load data from DL to DW")
 
 
-@api.route("/stores/load/<company_id>/<date>/")
-class DWResource(Resource):
-    def post(self, company_id, date):
-        """Load stores to DW."""
-        company = dal.company.get(company_id)
-        dw_service = service.data_warehouse.DataWarehouseService(company)
-        return dw_service.load_stores(date)
+@api.route("/scholar_census/<year>/")
+class DWScholarResource(Resource):
+    def post(self, year):
+        """Load scholar census to DW."""
+        load = service.data_warehouse.load("SCHOLAR_CENSUS", year)
+        return load
+
+
+@api.route("/university_census/<year>/")
+class DWUniversityResource(Resource):
+    def post(self, year):
+        """Load university census to DW."""
+        load = service.data_warehouse.load("UNIVERSITY_CENSUS", year)
+        return load

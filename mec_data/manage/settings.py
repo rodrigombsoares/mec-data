@@ -5,7 +5,7 @@ from envclasses import envclass
 @envclass
 @dataclass
 class DatabaseSettings:
-    connstring: str = "sqlite://"
+    connstring: str = "sqlite:///app.db"
 
     def prefix(self):
         return "MEC_DATA_DATABASE"

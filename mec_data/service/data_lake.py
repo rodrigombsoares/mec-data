@@ -1,5 +1,5 @@
 import os
-from mec_data.source import get_source
+from mec_data.source.factory import get_source
 from mec_data.utils.files import unzip_file
 from mec_data.data_lake import get_dl_client
 

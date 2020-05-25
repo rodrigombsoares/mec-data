@@ -29,6 +29,7 @@ autopep8 = "^1.4"
 serve = 'mec_data.manage.scripts:serve'
 init = 'mec_data.manage.scripts:init'
 migrate = 'mec_data.manage.scripts:migrate'
+test = 'mec_data.manage.scripts:test_all'
 
 [build-system]
 requires = ["poetry>=0.12"]

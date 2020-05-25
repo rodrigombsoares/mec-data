@@ -11,7 +11,7 @@ class DownloadScholar(Resource):
     def post(self, year):
         """Make request to download data from source"""
         res, status = service.data_source.download("SCHOLAR_CENSUS", year)
-        return Response(res, status=status)
+        return Response(str(res), status=status)
 
 
 @api.route("/university_census/<year>/")
@@ -19,4 +19,4 @@ class DownloadUniversity(Resource):
     def post(self, year):
         """Make request to download data from source"""
         res, status = service.data_source.download("UNIVERSITY_CENSUS", year)
-        return Response(res, status=status)
+        return Response(str(res), status=status)

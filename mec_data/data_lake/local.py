@@ -14,3 +14,11 @@ class LocalDL(DataLakeBase):
         print(path)
         shutil.move(file, path)
         return True
+
+    def get_files(self, bucket, prefix):
+        folder = os.path.join(self.data_lake, bucket, prefix)
+        paths = []
+        for root, subdirs, files in os.walk(folder):
+            for file in files:
+                paths.append(os.path.join(root, file))
+        return paths
