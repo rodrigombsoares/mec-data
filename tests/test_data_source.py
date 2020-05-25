@@ -10,6 +10,7 @@ class TestDataSource(TestCase):
 
     @patch("mec_data.source.base.download_file")
     def test_scholar_post(self, m_download_file):
+        # Make post request to download data from SCHOLAR CENSUS
         with self.test_app.test_client() as client:
             response = client.post(
                 "mec-data/download/scholar_census/2017/", follow_redirects=True
@@ -24,6 +25,8 @@ class TestDataSource(TestCase):
         m_download_file.side_effect = HTTPError(
             url="mocked", code=500, msg="mocked", hdrs="mocked", fp="mocked"
         )
+        # Make post request to download data from SCHOLAR CENSUS
+        # When raising error
         with self.test_app.test_client() as client:
             response = client.post(
                 "mec-data/download/scholar_census/2017/", follow_redirects=True
@@ -33,6 +36,7 @@ class TestDataSource(TestCase):
         # Assert route response status
         self.assertEqual(response.status_code, 500)
 
+        # If download error is 404
         m_download_file.side_effect = HTTPError(
             url="mocked", code=404, msg="mocked", hdrs="mocked", fp="mocked"
         )
@@ -40,7 +44,7 @@ class TestDataSource(TestCase):
             response = client.post(
                 "mec-data/download/scholar_census/2017/", follow_redirects=True
             )
-        # Assert that download method has been called correctly
+        # Assert that download method has been called 2+1 times
         assert 3 == m_download_file.call_count
         # Assert route response status
         self.assertEqual(response.status_code, 500)
